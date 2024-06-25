@@ -1,0 +1,20 @@
+/* ToastStyles.css */
+.Toastify__toast-container {
+    color: white; /* Toast text color */
+  }
+  
+  .Toastify__toast {
+    background: rgba(21, 21, 21, 1); /* Toast background color */
+    border: 1px solid #FFDD11; /* Toast border color */
+  }
+  
+  .Toastify__toast-body {
+    color: #FFDD11; /* Toast body text color */
+  }
+  
+  .Toastify__close-button {
+    color: #FFDD11; /* Close button color */
+  }
+  .Toastify__progress-bar {
+    background: #FFDD11; /* Progress bar color */
+  }

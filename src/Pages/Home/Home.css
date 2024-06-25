@@ -1,0 +1,20 @@
+.sun-like {
+  position: absolute;
+  background-color: white;
+  width: 20rem; /* 28 divided by 4 equals 7rem */
+  height: 20rem; /* 28 divided by 4 equals 7rem */
+  border-radius: 50%;
+  filter: blur(35px);
+  /* Optional: Add some opacity to enhance the sun-like effect */
+  opacity: 0.4;
+}
+.sun-like2 {
+  position: absolute;
+  background-color: white;
+  width: 24rem; /* 28 divided by 4 equals 7rem */
+  height: 24rem; /* 28 divided by 4 equals 7rem */
+  border-radius: 50%;
+  filter: blur(35px);
+  /* Optional: Add some opacity to enhance the sun-like effect */
+  opacity: 0.4;
+}
