@@ -378,7 +378,7 @@ const VentorDashboard = () => {
                     <h1 className="text-md ">Most viewed Country</h1>
                     <div className="flex justify-between items-center mt-2">
                       <div className="flex gap-2 items-center">
-                        <div className="rounded-full w-16 h-16 overflow-x-hidden">
+                        <div className="rounded-full w-16 h-16 overflow-x-hidden ">
                           <ReactCountryFlag
                             countryCode={countryCode}
                             svg
@@ -412,13 +412,15 @@ const VentorDashboard = () => {
         <div className="flex md:flex-row flex-col mt-10 gap-3 ">
           <div
             style={{ scrollbarWidth: "none" }}
-            className="bg-containerWhite w-full md:w-[60%] h-[350px] overflow-hidden overflow-y-auto p-5 rounded-lg shadow-sm"
+            className="bg-containerWhite w-full  h-[350px] overflow-hidden overflow-y-auto p-5 rounded-lg shadow-sm"
           >
-            <div className="flex justify-between">
+            <div className="flex justify-between ">
               <h1 className="font-bold text-textColor">Top Selling Products</h1>
-              <Datepicker fn={vendorTableData} />
+              <div className="bg-subContainerColor rounded-3xl">
+                <Datepicker fn={vendorTableData} />
+              </div>
             </div>
-            <table className="mt-2  w-full">
+            <table className="mt-2  w-full border">
               <thead className="text-textColor">
                 <tr className="h-12 font-bold bg-subContainerColor">
                   <td>

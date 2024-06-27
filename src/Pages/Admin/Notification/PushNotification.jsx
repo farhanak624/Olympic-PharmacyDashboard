@@ -116,9 +116,9 @@ function PushNotification() {
               <th style={{ minWidth: "15vh", maxWidth: "20vh" }}>Status</th>
             </tr>
           </thead>
-          <tbody>
-            {notidata.length > 0 ? (
-              notidata.map((data) => {
+          <tbody className="text-textColor">
+            {notidata?.length > 0 ? (
+              notidata?.map((data) => {
                 return (
                   <tr className="text-sm">
                     <td>{data?.title ? data?.title : "N/A"}</td>

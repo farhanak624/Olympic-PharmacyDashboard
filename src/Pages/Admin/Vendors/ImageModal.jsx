@@ -19,10 +19,10 @@ const ImageModal = ({ imageUrl, isOpen, onClose }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-containerWhite bg-opacity-50 flex items-center justify-center z-50">
             <div
                 ref={modalRef}
-                className="bg-white p-4 rounded-md relative flex items-center justify-center"
+                className="bg-containerWhite p-4 rounded-md relative flex items-center justify-center"
                 style={{ width: '70%', maxWidth: '800px', height: '70%', maxHeight: '600px' }}
             >
                 {/* <button className="absolute top-2 right-2 text-gray-700" onClick={onClose}>X</button> */}

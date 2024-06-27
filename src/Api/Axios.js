@@ -1,14 +1,46 @@
 import axios from "axios";
 const baseURL = import.meta.env.VITE_REACT_APP_ECOMURl2;
-async function getCountry() {
+const apikey = "AIzaSyBOHuJ-4CqJBjmSi_RugeonwPU5cBVqbeA";
+const getCountryFromCoordinates = async (latitude, longitude) => {
   try {
-    const response = await axios.get("https://ipapi.co/json/");
-    return response.data.country_name;
+    const response = await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apikey}`
+    );
+    const results = response.data.results;
+    if (results.length > 0) {
+      const addressComponents = results[0].address_components;
+      for (const component of addressComponents) {
+        if (component.types.includes("country")) {
+          return component.long_name;
+        }
+      }
+    }
+    return "India"; // Default to India if no country found
   } catch (error) {
     console.error("Error fetching country: ", error);
-    return "United States"; // Default to US or handle error appropriately
+    return "India"; // Default to India or handle error appropriately
   }
-}
+};
+const getCountry = async () => {
+  if (!navigator.geolocation) {
+    console.error("Geolocation is not supported by your browser");
+    return "India"; // Default to India or handle error appropriately
+  }
+
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        const country = await getCountryFromCoordinates(latitude, longitude);
+        resolve(country);
+      },
+      (error) => {
+        console.error("Error getting geolocation: ", error);
+        resolve("India"); // Default to India or handle error appropriately
+      }
+    );
+  });
+};
 const EcomUpdatedInstance = axios.create({ baseURL });
 
 EcomUpdatedInstance.interceptors.request.use(

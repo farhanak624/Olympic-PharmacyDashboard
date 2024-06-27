@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import CountryFlag from "react-country-flag";
 import countryCodeLookup from "country-code-lookup";
 import Swal from "sweetalert2";
-import { getTopVendors } from "../../../Api/AdminApi";
+import { actionOnVendor, getTopVendors } from "../../../Api/AdminApi";
 import Loader from "../../../Components/Loader/Loader";
 
 const TopVendors = () => {
@@ -14,38 +14,44 @@ const TopVendors = () => {
   const [page, setPage] = useState(1);
   const [userIdToBlock, setUserIdToBlock] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const fetchedVendorIds = new Set();
 
-  useEffect(() => {
+  const fetchTopVendors = useCallback(async () => {
     setIsLoading(true);
-    getTopVendors(page)
-      .then((data) => {
-        console.log("data in getTopVendors", data?.data);
-        const vendors = data?.data?.vendorData;
-        if (Array.isArray(vendors)) {
-          setTopVendors((prevData) => [...prevData, ...vendors]);
-          setTotalCount(data?.data?.totalVendor);
-        } else {
-          console.log("No Top vendors found");
+    try {
+      const { data } = await getTopVendors(page);
+      const vendors = data?.vendorData || [];
+      const uniqueVendors = vendors.filter((vendor) => {
+        if (fetchedVendorIds.has(vendor._id)) {
+          return false;
         }
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        console.log("error in getTopVendors:", error);
+        fetchedVendorIds.add(vendor._id);
+        return true;
       });
+      setTopVendors((prevData) => [...prevData, ...uniqueVendors]);
+      setTotalCount(data?.totalVendor || 0);
+    } catch (error) {
+      console.error("Error fetching top vendors:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [page]);
-
+  useEffect(() => {
+    fetchTopVendors();
+  }, [fetchTopVendors]);
   const handleToggleBlock = (id) => {
     const vendor = topVendors.find((v) => v._id === id);
     const action = vendor.vendorDetails.isBlocked ? "unblock" : "block";
 
     Swal.fire({
+      background: "#000", // Set background to black
+      color: "#ffdd11", // Set text color to #ffdd11
       title: "Are you sure?",
       text: `Do you want to ${action} this vendor?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#ffdd11",
+      cancelButtonColor: "#000",
       confirmButtonText: `Yes, ${action} it!`,
     }).then((result) => {
       if (result.isConfirmed) {
@@ -65,51 +71,50 @@ const TopVendors = () => {
                   : vendor
               )
             );
-            Swal.fire(
-              `${action.charAt(0).toUpperCase() + action.slice(1)}ed!`,
-              `Vendor has been ${action}ed.`,
-              "success"
-            );
+            Swal.fire({
+              background: "#000", // Set background to black
+              title: `${action.charAt(0).toUpperCase() + action.slice(1)}ed!`,
+              text: `Vendor has been ${action}ed.`,
+              icon: "success",
+              iconColor: "#ffdd11", // Set icon color to #ffdd11
+              confirmButtonColor: "#ffdd11",
+            });
           })
           .catch((error) => {
             console.error("Error updating blocking status:", error);
-            Swal.fire("Failed!", `Failed to ${action} the vendor.`, "error");
+            Swal.fire({
+              background: "#000", // Set background to black
+              color: "#ffdd11", // Set text color to #ffdd11
+              title: "Failed!",
+              text: `Failed to ${action} the vendor.`,
+              icon: "error",
+              iconColor: "#ffdd11", // Set icon color to #ffdd11
+              confirmButtonColor: "#ffdd11",
+            });
           });
       }
     });
   };
 
-  // const handleToggleBlock = (id) => {
-  //     actionOnVendor(id).then((data) => {
-  //         console.log("data in actionOnVendor: ", data);
-  //         setTopVendors(prevVendors => prevVendors.map(vendor =>
-  //             vendor._id === id ? { ...vendor, vendorDetails: { ...vendor.vendorDetails, isBlocked: !vendor.vendorDetails.isBlocked } } : vendor
-  //         ));
-  //     }).catch((error) => {
-  //         console.error('Error updating blocking status:', error);
-  //     });
-  // };
-
-  const handleScroll = () => {
-    // Detect when user has scrolled to the bottom
+  const handleScroll = useCallback(() => {
+    if (isLoading) return; // Prevent fetching if already loading
     const { scrollTop, scrollHeight, clientHeight } =
       document.documentElement || document.body;
 
-    // Detect when user has scrolled to the bottom
-    if (scrollTop + clientHeight >= scrollHeight - 5) {
-      // If all data is not fetched yet
-      if (topVendors.length < totalCount) {
-        setPage((prevPage) => prevPage + 1);
-      }
+    if (
+      scrollTop + clientHeight >= scrollHeight - 5 &&
+      topVendors.length < totalCount
+    ) {
+      setPage((prevPage) => prevPage + 1);
     }
-  };
+  }, [isLoading, topVendors.length, totalCount]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [topVendors, totalCount]);
+  }, [handleScroll]);
 
   const getDisplayValue = (value) => {
     return value != undefined || value != null || value === "" ? value : "N/A";
@@ -132,8 +137,8 @@ const TopVendors = () => {
               <th>Action</th>
             </tr>
           </thead>
-          <tbody>
-            {isLoading ? (
+          <tbody className="text-textColor">
+            {isLoading && page === 1 ? (
               <tr>
                 <td colSpan="8" className="text-center py-3">
                   <Loader />
@@ -147,7 +152,7 @@ const TopVendors = () => {
               </tr>
             ) : (
               topVendors?.map((vendor, index) => (
-                <tr key={index} className="border-b border-gray-200">
+                <tr key={index} className="border-b ">
                   <td
                     className="text-sm text-center py-3 cursor-pointer"
                     onClick={() =>
@@ -229,7 +234,7 @@ const TopVendors = () => {
                     }
                   >
                     {getDisplayValue(
-                      parseFloat(vendor?.returnPercentage.toFixed(2))
+                      parseFloat(vendor?.returnPercentage?.toFixed(2))
                     )}{" "}
                     %
                   </td>
@@ -249,7 +254,7 @@ const TopVendors = () => {
                       className={`w-10 h-6 rounded-full focus:outline-none ${
                         vendor.vendorDetails.isBlocked
                           ? "bg-gray-300"
-                          : "bg-blue-600"
+                          : "bg-navblue"
                       }`}
                       onClick={() => {
                         handleToggleBlock(vendor._id);
@@ -266,6 +271,13 @@ const TopVendors = () => {
                   </td>
                 </tr>
               ))
+            )}
+            {isLoading && page > 1 && (
+              <tr>
+                <td colSpan="9" className="text-center py-3">
+                  <Loader />
+                </td>
+              </tr>
             )}
           </tbody>
         </table>

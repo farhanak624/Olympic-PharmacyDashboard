@@ -3,7 +3,7 @@ import curlyWave from "../../assets/images/curlyWave.png";
 import GoogleMapReact from "google-map-react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
+import { ClipLoader, PuffLoader } from "react-spinners";
 
 const override = {
   display: "block",
@@ -360,7 +360,7 @@ const PharmacyRegister = () => {
       </div>
       {isLoading ? (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-75 z-50">
-          <ClipLoader
+          <PuffLoader
             color={color}
             loading={isLoading}
             cssOverride={override}

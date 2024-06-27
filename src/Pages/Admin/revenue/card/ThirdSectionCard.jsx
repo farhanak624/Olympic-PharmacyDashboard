@@ -32,7 +32,7 @@ function ThirdSectionCard({
         />
       </div>
       <div className="flex items-center gap-2 mt-5">
-        <h1 className="font-bold text-xl">
+        <h1 className="font-bold text-xl text-textColor">
           {data?.cloudRevenue ? Symbol : ""}
           {data?.cloudRevenue >= 0
             ? data?.cloudRevenue.toFixed(1)

@@ -2,6 +2,7 @@ import React from 'react'
 import AdminSideBar from '../../Navbar/Side/AdminSideBar'
 import TopNavBar from '../../Navbar/Top/TopNavBar'
 import { Outlet } from "react-router-dom";
+import SpinningLoader from '../../Loader/SpinningLoader';
 
 const AdminLayout = () => {
   return (
@@ -13,6 +14,7 @@ const AdminLayout = () => {
           <Outlet />
         </main>
       </div>
+      <SpinningLoader />
     </div>
   )
 }

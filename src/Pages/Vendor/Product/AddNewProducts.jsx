@@ -1,32 +1,18 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import BrandModal from "../../../Modals/ProductModals/BrandModal";
-import AddFashionVariantForm from "./VariantForms/AddFashionVariantForm";
-import AddPhoneVariant from "./VariantForms/AddPhoneVariant";
-import FurnitureVariant from "./VariantForms/FurnitureVariant";
-import PersonalCareVariant from "./VariantForms/PersonalCareVariant";
-import SportsVariant from "./VariantForms/SportsVariant";
-import GroceryVariant from "./VariantForms/GroceryVariant";
-import HomeApplianceVariant from "./VariantForms/HomeApplianceVariant.";
-import GadgetAccesorryVariant from "./VariantForms/Gadget&AccesorryVariant";
 import SearchBoxData from "./SearchBoxData";
-import CategoryModal from "../../../Modals/ProductModals/CategoryModal";
-import SubcategoryModal from "../../../Modals/ProductModals/SubcategoryModal";
-import {
-  addProduct,
-  getSectionCategories,
-  getSections,
-} from "../../../../Api/ApiCall";
-import ReturnBox from "./ReturnBox";
-import Accessories from "./VariantForms/Accessories";
-import ToysAndBabyVariants from "./VariantForms/ToysAndBabyVariants";
 import { toast } from "react-toastify";
-import AddMultiSelectDropDown from "../../../customDropdown/AddMultiSelectDropDown";
 import { useNavigate } from "react-router-dom";
-import SectionModal from "../../../Modals/ProductModals/SectionModal";
 import { useDispatch } from "react-redux";
-import { loadSpinner } from "../../../../Redux/Features/NavbarSlice";
-import OtherSections from "./VariantForms/OtherSections";
+import { addProduct, getSectionCategories, getSections } from "../../../Api/VendorApi";
+import { uploadImage } from "../../../Utils/imageUpload";
+import CategoryModal from "../../../Components/Modal/Product/CategoryModal";
+import SubcategoryModal from "../../../Components/Modal/Product/SubcategoryModal";
+import AddMultiSelectDropDown from "../../../Components/Dropdowns/AddMultiSelectDropDown";
+import OtherSection from "./OtherSections";
+import { CurrencyList } from "../../../Utils/country-by-currency-code";
+import BrandModal from "../../../Components/Modal/Product/BrandModal";
+import ReturnBox from "./ReturnBox";
+import { loadSpinner } from "../../../Redux/Features/NavbarSlice";
 
 const AddNewProducts = () => {
   const dispatch = useDispatch();
@@ -53,7 +39,7 @@ const AddNewProducts = () => {
     brand: "",
     description: "",
     currency: "",
-    section: "",
+    section: sectionId,
     category: "",
     subCategory: "",
     variants: [],
@@ -68,7 +54,19 @@ const AddNewProducts = () => {
   useEffect(() => {
     getSections().then((data) => {
       console.log("sections", data?.data?.sectionData);
+      const sectionData = data?.data?.sectionData;
+      sectionData.find((section) => {
+        if (section.name === 'Pharmacy') {
+          setFormCategory(section.name);
+          setSectionId(section._id);
+          setformData({
+            ...formData,
+            section: section._id,
+          })
+        }
+      });
       setSectionList(data?.data?.sectionData);
+      
     });
   }, [isSectionModal]);
   useEffect(() => {
@@ -111,6 +109,7 @@ const AddNewProducts = () => {
     "Toys & Baby",
     "Furniture",
     "Grocery",
+    "Pharmacy"
   ];
   const [errors, setErrors] = useState({});
   const brandModal = () => {
@@ -131,7 +130,6 @@ const AddNewProducts = () => {
   };
   const extraHandle = () => {
     if (!Section.includes(formCategory)) {
-      console.log("fi");
       setOtherSectionss(true);
     } else {
       setOtherSectionss(false);
@@ -356,9 +354,11 @@ const AddNewProducts = () => {
     <>
       <div className="bg-containerWhite w-full flex justify-center h-full rounded-xl min-h-[600px] shadow-sm p-4">
         <form onSubmit={formHandling}>
-          <div className="lg:max-w-[80%] flex items-center justify-center w-full">
+          <div className="lg:max-w-[80%] flex items-center justify-center w-full ">
             <div className="text-center">
-              <h1 className="text-2xl font-semibold">Add New Product</h1>
+              <h1 className="text-2xl font-semibold text-textColor">
+                Add New Product
+              </h1>
               <p className="text-gray-500 text-lg mt-4">
                 This section helps to add your products
               </p>
@@ -367,13 +367,13 @@ const AddNewProducts = () => {
                 <div className="w-full p-10">
                   {/* <p className="text-red-500 text-xs">{errors.productName}</p> */}
                   {/* First row with Product Name and Brand dropdown */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-3">
-                    <div className="flex items-center gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-3">
+                    {/* <div className="flex items-center gap-2">
                       <select
                         name="section"
                         className={`p-3  shadow  ${
                           formData.section ? "text-black" : "text-slate-400"
-                        } shadow-black/20 rounded-lg outline-none bg-[rgba(244,245,250,1)] border-none w-full`}
+                        } shadow-black/20 rounded-lg outline-none bg-secondoryBackground border-none w-full`}
                         id=""
                         onChange={(e) => {
                           setOtherSectionss(false);
@@ -412,16 +412,8 @@ const AddNewProducts = () => {
                             );
                           })}
                       </select>
-                      {/* <button
-                        onClick={() => {
-                          setIsSectionModal(true);
-                        }}
-                        type="button"
-                        className="w-12 h-12 inline-flex justify-center bg-navblue rounded-md text-2xl text-white"
-                      >
-                        <p className="mt-1">+</p>
-                      </button> */}
-                    </div>
+                      
+                    </div> */}
                     <input
                       type="text"
                       defaultValue={``}
@@ -432,58 +424,42 @@ const AddNewProducts = () => {
                         })
                       }
                       placeholder="Product Name"
-                      className="p-2 rounded-lg shadow shadow-black/20  outline-none bg-[rgba(244,245,250,1)] border-none flex-1"
+                      className="p-2 rounded-lg shadow shadow-black/20 text-textColor outline-none bg-secondoryBackground border-none flex-1"
                     />
 
                     <div className="flex items-center gap-2">
                       {/* <p className="text-red-500 text-xs">{errors?.currency}</p> */}
                       <select
                         name="currency"
-                        onChange={(e) =>
-                          setformData({
-                            ...formData,
-                            currency: e.target.value,
-                          })
-                        }
+                        onChange={(e) => {
+                          console.log("currency", e.target.value) ||
+                            setformData({
+                              ...formData,
+                              currency: e.target.value,
+                            });
+                        }}
+                        value={formData.currency}
                         className={`p-3 shadow  ${
-                          formData.currency ? "text-black" : "text-slate-400"
-                        } shadow-black/20 rounded-lg outline-none text-black bg-[rgba(244,245,250,1)] border-none w-full`}
+                          formData.currency
+                            ? "text-textColor"
+                            : "text-slate-400"
+                        } shadow-black/20 rounded-lg outline-none text-black bg-secondoryBackground border-none w-full`}
                         placeholder="currency"
                         id=""
                       >
                         <option selected disabled value="">
                           Currency
                         </option>
-                        <option className="text-black" value="AED">
-                          AED
-                        </option>
-                        <option className="text-black" value="INR">
-                          INR
-                        </option>
-                        <option className="text-black" value="USD">
-                          USD
-                        </option>
-                        <option className="text-black" value="EUR">
-                          EUR
-                        </option>
-                        <option className="text-black" value="JPY">
-                          JPY
-                        </option>
-                        <option className="text-black" value="GBP">
-                          GBP
-                        </option>
-                        <option className="text-black" value="AUD">
-                          AUD
-                        </option>
-                        <option className="text-black" value="HKD">
-                          HKD
-                        </option>
-                        <option className="text-black" value="AED">
-                          AED
-                        </option>
-                        <option className="text-black" value="NZD">
-                          NZD
-                        </option>
+                        {CurrencyList.map((currency) => {
+                          return (
+                            <option
+                              className="text-white"
+                              value={currency.currency_code}
+                            >
+                              {currency.country}( {currency.currency_code})
+                            </option>
+                          );
+                        })}
 
                         {/* Brand options */}
                       </select>
@@ -492,7 +468,7 @@ const AddNewProducts = () => {
                   {/* Description on the second row */}
                   {/* <p className="text-red-500 text-xs">{errors.description}</p> */}
                   <textarea
-                    className="shadow shadow-black/20 bg-[rgba(244,245,250,1)] p-2 rounded-lg outline-none border-none w-full mb-2"
+                    className="shadow shadow-black/20 bg-secondoryBackground p-2 rounded-lg outline-none border-none w-full mb-2 text-textColor"
                     name="description"
                     onChange={(e) => {
                       setformData({
@@ -516,8 +492,8 @@ const AddNewProducts = () => {
                       <select
                         name="Category"
                         className={`p-3 shadow shadow-black/20 ${
-                          formData.category ? "text-black" : "text-slate-400"
-                        } rounded-lg outline-none bg-[rgba(244,245,250,1)] border-none w-full`}
+                          formData.category ? "text-textColor " : "text-slate-400"
+                        } rounded-lg outline-none bg-secondoryBackground border-none w-full`}
                         id=""
                         onChange={(e) => {
                           setCategoryId(e.target.value);
@@ -539,7 +515,7 @@ const AddNewProducts = () => {
                           categoryList.map((category) => {
                             return (
                               <option
-                                className="text-black"
+                                className="text-textColor"
                                 key={category._id}
                                 value={category._id}
                               >
@@ -558,11 +534,11 @@ const AddNewProducts = () => {
                       >
                         <p className="mt-1">+</p>
                       </button>
-                      {isSectionModal ? (
+                      {/* {isSectionModal ? (
                         <SectionModal callback={sectionModal} />
                       ) : (
                         ""
-                      )}
+                      )} */}
                       {iscategory ? (
                         <CategoryModal
                           callback={categoryModal}
@@ -610,7 +586,7 @@ const AddNewProducts = () => {
                         name="brand"
                         className={`p-3 rounded-lg outline-none${
                           formData.gender ? "text-black" : "text-slate-400"
-                        } bg-[rgba(244,245,250,1)] border-none w-full`}
+                        } bg-secondoryBackground border-none w-full`}
                         placeholder="gender"
                         id=""
                         onChange={(e) => {
@@ -672,15 +648,15 @@ const AddNewProducts = () => {
                     formCategory === "Sports" ||
                     formCategory === "Fashion" ||
                     formCategory === "Furniture" ||
-                    formCategory !== "" ? (
+                    formCategory == "Pharmacy" ? (
                       <div className="flex items-center gap-2">
                         <select
                           name="brand"
                           className={`p-3 rounded-lg shadow outline-none ${
                             formData.subCategory
-                              ? "text-black"
+                              ? "text-textColor"
                               : "text-slate-400"
-                          } bg-[rgba(244,245,250,1)] border-none w-full`}
+                          } bg-secondoryBackground border-none w-full`}
                           placeholder="currency"
                           id=""
                           onChange={(e) => {
@@ -696,7 +672,7 @@ const AddNewProducts = () => {
                           {subCategoryList[0] &&
                             subCategoryList.map((data) => {
                               return (
-                                <option className="text-black" value={data._id}>
+                                <option className="text-textColor" value={data._id}>
                                   {data.name}
                                 </option>
                               );
@@ -717,98 +693,9 @@ const AddNewProducts = () => {
                     )}
                     {/* Empty third column on the third row for lg screens */}
                   </div>
-                  {formCategory === "Fashion" ? (
-                    <AddFashionVariantForm
-                      setformData={setformData}
-                      formData={formData}
-                      errors={errors}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  {formCategory === "Mobiles" ? (
-                    <AddPhoneVariant
-                      setformData={setformData}
-                      formData={formData}
-                      errors={errors}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  {formCategory === "Furniture" ? (
-                    <FurnitureVariant
-                      setformData={setformData}
-                      formData={formData}
-                      errors={errors}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  {formCategory === "Personal Care" ? (
-                    <PersonalCareVariant
-                      setformData={setformData}
-                      formData={formData}
-                      errors={errors}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  {formCategory === "Sports" ? (
-                    <SportsVariant
-                      setformData={setformData}
-                      formData={formData}
-                      errors={errors}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  {formCategory === "Toys & Baby" ? (
-                    <ToysAndBabyVariants
-                      setformData={setformData}
-                      formData={formData}
-                      errors={errors}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  {formCategory === "Grocery" ? (
-                    <GroceryVariant
-                      setformData={setformData}
-                      formData={formData}
-                      errors={errors}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  {formCategory === "Gadget & Accessories" ? (
-                    <GadgetAccesorryVariant
-                      setformData={setformData}
-                      formData={formData}
-                      errors={errors}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  {formCategory === "Accessories" ? (
-                    <Accessories
-                      setformData={setformData}
-                      formData={formData}
-                      errors={errors}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  {formCategory === "Appliances" ? (
-                    <HomeApplianceVariant
-                      setformData={setformData}
-                      formData={formData}
-                      errors={errors}
-                    />
-                  ) : (
-                    ""
-                  )}
-                  {OtherSectionss && (
-                    <OtherSections
+
+                  {formCategory === "Pharmacy"  && (
+                    <OtherSection
                       setformData={setformData}
                       formData={formData}
                       errors={errors}
@@ -820,7 +707,7 @@ const AddNewProducts = () => {
                   ) : (
                     <>
                       <div className="flex justify-normal">
-                        <label className="font-semibold" htmlFor="">
+                        <label className="font-semibold text-textColor" htmlFor="">
                           Return
                         </label>
                       </div>
@@ -840,7 +727,7 @@ const AddNewProducts = () => {
                             formHandling(e);
                           }}
                           type="submit"
-                          className="bg-navblue text-white p-2 rounded-lg border shadow"
+                          className="bg-navblue text-textColor2 p-2 rounded-lg border shadow"
                         >
                           Save Product
                         </button>

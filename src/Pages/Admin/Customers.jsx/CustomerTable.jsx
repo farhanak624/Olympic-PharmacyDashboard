@@ -112,9 +112,8 @@ const CustomerTable = ({ data, setPage, count, page, selected }) => {
       {data && (
         <table className="w-full text-center mt-4">
           <thead
-            className=" rounded-lg font-semibold"
+            className=" rounded-lg font-semibold bg-subContainerColor text-textColor"
             style={{
-              backgroundColor: "rgba(242, 242, 242, 1)",
               height: "50px",
             }}
           >
@@ -126,72 +125,80 @@ const CustomerTable = ({ data, setPage, count, page, selected }) => {
               <td>Phone Number</td>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-textColor">
             {/* demo tr */}
-            {data?.map((data, i) => (
-              <tr
-                key={i}
-                style={{
-                  height: "60px",
-                }}
-                className="text-sm"
-              >
-                <td>
-                  {" "}
-                  <div className="flex gap-1 items-center">
-                    <div className="rounded-full w-10 h-10 overflow-hidden bg-slate-50 border border-gray-400 mx-3 shadow-md">
-                      <img
-                        className={
-                          data?.details?.profilePicture == "" ? "p-2" : ""
-                        }
-                        src={
-                          data?.details?.profilePicture == ""
-                            ? "/customer.png"
-                            : data?.details?.profilePicture
-                        }
-                        alt=""
-                      />
-                    </div>
-                    {data?.name ? data?.name : "N/A"}
-                  </div>
-                </td>
-                <td className=" truncate">
-                  {data?.email ? data?.email : "N/A"}
-                </td>
-
-                <td>
-                  {" "}
-                  <div className="flex gap-2 items-center">
-                    <div
-                      className={`w-6 h-6 overflow-hidden  rounded-full relative flex items-center justify-center ${
-                        data?.details.country ? "" : "bg-gray-200"
-                      }`}
-                    >
-                      {data?.details.country && (
-                        <CountryFlag
-                          className="w-full h-full object-cover"
-                          countryCode={
-                            countryCodeLookup.byCountry(data?.details.country)
-                              ?.iso2 || ""
-                          }
-                          svg
-                        />
-                      )}
-                    </div>
-                    {data?.details.country ? data?.details.country : "N/A"}
-                  </div>
-                </td>
-                {selected == "Flicks" && (
+            {data?.length > 0 ? (
+              data?.map((data, i) => (
+                <tr
+                  key={i}
+                  style={{
+                    height: "60px",
+                  }}
+                  className="text-sm"
+                >
                   <td>
-                    $
-                    {data?.flicksMembership?.membershipPlan?.name
-                      ? data?.flicksMembership?.membershipPlan?.name
-                      : "N/A"}
+                    {" "}
+                    <div className="flex gap-1 items-center">
+                      <div className="rounded-full w-10 h-10 overflow-hidden bg-slate-50 border border-gray-400 mx-3 shadow-md">
+                        <img
+                          className={
+                            data?.details?.profilePicture == "" ? "p-2" : ""
+                          }
+                          src={
+                            data?.details?.profilePicture == ""
+                              ? "/customer.png"
+                              : data?.details?.profilePicture
+                          }
+                          alt=""
+                        />
+                      </div>
+                      {data?.name ? data?.name : "N/A"}
+                    </div>
                   </td>
-                )}
-                <td>{data?.phoneNumber ? data?.phoneNumber : "N/A"}</td>
+                  <td className=" truncate">
+                    {data?.email ? data?.email : "N/A"}
+                  </td>
+
+                  <td>
+                    {" "}
+                    <div className="flex gap-2 items-center">
+                      <div
+                        className={`w-6 h-6 overflow-hidden  rounded-full relative flex items-center justify-center ${
+                          data?.details.country ? "" : "bg-gray-200"
+                        }`}
+                      >
+                        {data?.details.country && (
+                          <CountryFlag
+                            className="w-full h-full object-cover"
+                            countryCode={
+                              countryCodeLookup.byCountry(data?.details.country)
+                                ?.iso2 || ""
+                            }
+                            svg
+                          />
+                        )}
+                      </div>
+                      {data?.details.country ? data?.details.country : "N/A"}
+                    </div>
+                  </td>
+                  {selected == "Flicks" && (
+                    <td>
+                      $
+                      {data?.flicksMembership?.membershipPlan?.name
+                        ? data?.flicksMembership?.membershipPlan?.name
+                        : "N/A"}
+                    </td>
+                  )}
+                  <td>{data?.phoneNumber ? data?.phoneNumber : "N/A"}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-red-700">
+                  No Data Found
+                </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       )}

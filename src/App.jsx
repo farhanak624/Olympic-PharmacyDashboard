@@ -23,6 +23,19 @@ import Customers from "./Pages/Admin/Customers.jsx/Customers";
 import Adminrevenue from "./Pages/Admin/revenue/Adminrevenue";
 import VendorHome from "./Components/Layout/Vendor/VendorHome";
 import VendorDashboard from "./Pages/Vendor/Dashboard/VendorDashboard";
+import AddNewProducts from "./Pages/Vendor/Product/AddNewProducts";
+import AllProducts from "./Pages/Vendor/Product/AllProducts";
+import ProductDetailed from "./Pages/Vendor/Product/ProductDetailed";
+import EditProduct from "./Pages/Vendor/Product/EditProduct";
+import OrdersPage from "./Pages/Vendor/Orders/OrdersPage";
+import VendorSpecialDeals from "./Pages/Vendor/Specialdeal/SpecialDeals";
+import Wallet from "./Pages/Vendor/Wallet/Wallet";
+import VendorSlider from "./Pages/Vendor/Slider/VendorSlider";
+import ProfilePage from "./Pages/Vendor/Profile/ProfilePage";
+import VendorCoupons from "./Pages/Vendor/Coupon/VendorCoupons";
+import VendMain from "./Pages/Admin/Vendors/VendMain";
+import VenDetail from "./Pages/Admin/Vendors/VenDetail";
+import VendorRequests from "./Pages/Admin/Vendors/VendorRequests";
 
 function App() {
   return (
@@ -36,6 +49,22 @@ function App() {
               element={<Navigate replace to="/vendor/dashboard" />}
             />
             <Route path="/vendor/dashboard" element={<VendorDashboard />} />
+            <Route path="/vendor/products" element={<AddNewProducts />} />
+            <Route path="/vendor/AllProducts" element={<AllProducts />} />
+            <Route
+              path="/vendor/ProductDetailed"
+              element={<ProductDetailed />}
+            />
+            <Route path="/vendor/editProduct" element={<EditProduct />} />
+            <Route path="/vendor/orders" element={<OrdersPage />} />
+            <Route
+              path="/vendor/specialdeals"
+              element={<VendorSpecialDeals />}
+            />
+            <Route path="/vendor/wallet" element={<Wallet />} />
+            <Route path="/vendor/slider" element={<VendorSlider />} />
+            <Route path="/vendor/profile" element={<ProfilePage />} />
+            <Route path="/vendor/coupon" element={<VendorCoupons />} />
           </Route>
         </Route>
 
@@ -59,6 +88,12 @@ function App() {
             <Route path="/admin/vendors" element={<VendorsPage />} />
             <Route path="/admin/customers" element={<Customers />} />
             <Route path="/admin/revenue" element={<Adminrevenue />} />
+            <Route path="/admin/vendors" element={<VendMain />} />
+            <Route path="/admin/vendorsOverview/:id" element={<VenDetail />} />
+            <Route
+              path="/admin/vendorsRequestOverview/:id"
+              element={<VendorRequests />}
+            />
           </Route>
         </Route>
 

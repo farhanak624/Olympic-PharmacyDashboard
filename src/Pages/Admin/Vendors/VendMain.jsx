@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TopVendors from "./TopVendors";
 import VendorRequests from "./VendorRequests";
 
-const VendorsPage = () => {
+const VendMain = () => {
   const [activeButton, setActiveButton] = useState("topVendors");
 
   const handleButtonClick = (button) => {
@@ -46,4 +46,4 @@ const VendorsPage = () => {
   );
 };
 
-export default VendorsPage;
+export default VendMain;

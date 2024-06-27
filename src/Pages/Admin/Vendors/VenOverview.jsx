@@ -7,7 +7,8 @@ import {
   approveVendor,
   getVendorDetails,
   rejectVendor,
-} from "../../../../API/ApiPharma";
+} from "../../../Api/AdminApi";
+import { loadSpinner } from "../../../Redux/Features/NavbarSlice";
 
 const VenOverview = ({ vendorId }) => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const VenOverview = ({ vendorId }) => {
       location.pathname.startsWith("/admin/vendorsRequestOverview/")
     );
 
-    // dispatch(loadSpinner());
+    dispatch(loadSpinner());
     getVendorDetails(id)
       .then((data) => {
         const vendorDetails = data?.data?.vendorData;
@@ -40,7 +41,7 @@ const VenOverview = ({ vendorId }) => {
         console.log("error in getVendorRequests:", error);
       })
       .finally(() => {
-        // dispatch(loadSpinner());
+        dispatch(loadSpinner());
       });
   }, []);
 
@@ -85,23 +86,25 @@ const VenOverview = ({ vendorId }) => {
 
   return (
     <div className="bg-containerWhite w-full rounded-xl min-h-[600px] shadow-sm p-4">
-      {/* <button
-        onClick={() => navigate("/admin/vendors")}
+      <button
+        onClick={() => {
+          window.history.back();
+        }}
         className="flex items-center  border border-gray-100 cursor-pointer w-[100px] shadow-md justify-center font-bold gap-2 mb-4"
       >
         {" "}
-        <div className="flex justify-center items-center">
-          <span className="font-bold" style={{ fontSize: "30px" }}>
+        <div className="flex justify-center items-center text-textColor">
+          <span className="font-bold " style={{ fontSize: "30px" }}>
             &#8592;
           </span>{" "}
           <p className="mt-1 ml-2">Back</p>
         </div>
-      </button> */}
+      </button>
 
       <div className="flex justify-between mb-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <div
-            className={`w-full sm:w-3/5 bg-gray-100 rounded-xl p-4 text-gray-600`}
+            className={`w-full sm:w-3/5 bg-containerWhite rounded-xl p-4 text-gray-600`}
           >
             <div className="w-full sm:w-2/5 mb-4 sm:mb-0">
               <img
@@ -125,7 +128,7 @@ const VenOverview = ({ vendorId }) => {
                   type="text"
                   id="vendorName"
                   placeholder="Vendor Name"
-                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none"
+                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none bg-subContainerColor"
                   value={vendorData.name}
                 />
               </div>
@@ -141,7 +144,7 @@ const VenOverview = ({ vendorId }) => {
                   type="text"
                   id="contactNumber"
                   placeholder="Contact Number"
-                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none"
+                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none bg-subContainerColor"
                   value={vendorData.phoneNumber}
                 />
               </div>
@@ -157,7 +160,7 @@ const VenOverview = ({ vendorId }) => {
                   type="text"
                   id="email"
                   placeholder="Email ID"
-                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none"
+                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none bg-subContainerColor"
                   value={vendorData?.email}
                 />
               </div>
@@ -172,7 +175,7 @@ const VenOverview = ({ vendorId }) => {
                     type="text"
                     id="dob"
                     placeholder="Date of Birth"
-                    className="border border-gray-300 rounded-md py-1 px-2 w-full pr-8 focus:outline-none"
+                    className="border border-gray-300 rounded-md py-1 px-2 w-full pr-8 focus:outline-none bg-subContainerColor"
                     value={formatDate(vendorData?.vendorDetails?.dateOfBirth)}
                   />
                   <svg
@@ -205,7 +208,7 @@ const VenOverview = ({ vendorId }) => {
                 type="text"
                 id="address"
                 placeholder="Address"
-                className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none"
+                className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none bg-subContainerColor"
                 value={vendorData?.vendorDetails?.address}
               />
             </div>
@@ -220,7 +223,7 @@ const VenOverview = ({ vendorId }) => {
                   type="text"
                   id="city"
                   placeholder="City"
-                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none"
+                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none bg-subContainerColor"
                   value={vendorData?.vendorDetails?.address}
                 />
               </div>
@@ -234,7 +237,7 @@ const VenOverview = ({ vendorId }) => {
                   type="text"
                   id="state"
                   placeholder="State"
-                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none"
+                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none bg-subContainerColor"
                   value={vendorData?.vendorDetails?.state}
                 />
               </div>
@@ -250,7 +253,7 @@ const VenOverview = ({ vendorId }) => {
                   type="text"
                   id="country"
                   placeholder="Country"
-                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none"
+                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none bg-subContainerColor"
                   value={vendorData?.vendorDetails?.country}
                 />
               </div>
@@ -264,7 +267,7 @@ const VenOverview = ({ vendorId }) => {
                   type="text"
                   id="postcode"
                   placeholder="Post code"
-                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none"
+                  className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none bg-subContainerColor"
                   value={vendorData?.vendorDetails?.postCode}
                 />
               </div>
@@ -272,7 +275,7 @@ const VenOverview = ({ vendorId }) => {
           </div>
 
           <div
-            className={`w-full sm:w-2/5 bg-gray-100 rounded-xl p-4 text-gray-600 h-fit`}
+            className={`w-full sm:w-2/5 bg-containerWhite rounded-xl p-4 text-gray-600 h-fit`}
           >
             <div className="mb-4">
               <label htmlFor="proof" className="text-sm font-semibold">
@@ -283,7 +286,7 @@ const VenOverview = ({ vendorId }) => {
                 type="text"
                 id="address"
                 placeholder="Proof"
-                className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none"
+                className="border border-gray-300 rounded-md py-1 px-2 w-full focus:outline-none bg-subContainerColor"
                 value={vendorData?.vendorDetails?.profileId}
               />
             </div>
@@ -293,7 +296,7 @@ const VenOverview = ({ vendorId }) => {
               </label>
               <div className="flex flex-wrap mt-2">
                 <div
-                  className="w-16 h-16 mr-2 mb-2 rounded-md overflow-hidden cursor-pointer"
+                  className="w-16 h-16 mr-2 mb-2 rounded-md overflow-hidden cursor-pointer bg-subContainerColor"
                   onClick={() =>
                     openModal(
                       vendorData?.vendorDetails?.profileIdImages?.backPageImage
@@ -309,7 +312,7 @@ const VenOverview = ({ vendorId }) => {
                   />
                 </div>
                 <div
-                  className="w-16 h-16 mr-2 mb-2 rounded-md overflow-hidden cursor-pointer"
+                  className="w-16 h-16 mr-2 mb-2 rounded-md overflow-hidden cursor-pointer bg-subContainerColor"
                   onClick={() =>
                     openModal(
                       vendorData?.vendorDetails?.profileIdImages?.frontPageImage

@@ -18,6 +18,7 @@ import {
   geytgraphdataofRevenue,
 } from "../../../Api/AdminApi";
 import SpecialDeals from "./tables/SpecialDeals";
+import { loadSpinner } from "../../../Redux/Features/NavbarSlice";
 export const UserContext = createContext();
 
 function Adminrevenue() {
@@ -85,7 +86,7 @@ function Adminrevenue() {
       .catch((err) => console.log(err));
   };
   const [totalAmount, setTotalAmount] = useState();
-  const [border, setborder] = useState("Cloud");
+  const [border, setborder] = useState("Orders");
   const [cloudData, setCloudData] = useState([]);
   const [flixData, setFlixData] = useState([]);
   const [orderData, setOrederData] = useState([]);
@@ -95,38 +96,11 @@ function Adminrevenue() {
   const [loading, setLoading] = useState(true);
   const [CurrencySymbol, setCurrencySymbol] = useState("");
   const dispatch = useDispatch();
-  const handliSubmit = (cheking = "Cloud") => {
-    // dispatch(loadSpinner());
+  const handliSubmit = (cheking = "Orders") => {
+    dispatch(loadSpinner());
     setborder(cheking);
     setLoading(true);
-    if (cheking === "Cloud") {
-      adminCloudRevenuetable(page)
-        .then((data) => {
-          // console.log(data?.data?.cloudDetails);
-          setLoading(false);
-          setCloudData((prev) => [...prev, ...data?.data?.cloudDetails]);
-        })
-        .catch((err) => {
-          console.log(err);
-          setLoading(false);
-        })
-        .finally(() => {
-          // dispatch(loadSpinner());
-        });
-    } else if (cheking === "Flicks") {
-      adminFlixTablerevenue(page)
-        .then((data) => {
-          // console.log(data?.data?.membershipDetails);
-          setLoading(false);
-          setFlixData((prev) => [...prev, ...data?.data?.membershipDetails]);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          // dispatch(loadSpinner());
-        });
-    } else if (cheking === "Orders") {
+    if (cheking === "Orders") {
       adminrevenueOreder()
         .then((data) => {
           // console.log(data?.data?.orderDetails);
@@ -138,24 +112,9 @@ function Adminrevenue() {
           console.log(err);
         })
         .finally(() => {
-          // dispatch(loadSpinner());
+          dispatch(loadSpinner());
         });
-    }
-    // else if (cheking === "Special deals") {
-    //   adminrevenueSpesialDeals()
-    //     .then((data) => {
-    //       setLoading(false);
-    //       // console.log(data?.data?.specialDeals);
-    //       setSpecialDealsdata(data?.data?.specialDeals);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     })
-    //     .finally(() => {
-    //       dispatch(loadSpinner());
-    //     });
-    // }
-    else if (cheking === "Banner Section") {
+    } else if (cheking === "Banner Section") {
       adminrevenuebenner(page)
         .then((data) => {
           // console.log(data?.data?.requests);
@@ -167,7 +126,7 @@ function Adminrevenue() {
           console.log(err);
         })
         .finally(() => {
-          // dispatch(loadSpinner());
+          dispatch(loadSpinner());
         });
     }
   };
@@ -177,6 +136,7 @@ function Adminrevenue() {
   useEffect(() => {
     getrevenueFirstSection()
       .then((data) => {
+        dispatch(loadSpinner());
         setTransaction(data?.data?.details?.totalTransaction);
         setPayOut(data?.data?.details?.payouts);
         setfirstsection2(data?.data?.details?.totalIncome);
@@ -187,6 +147,9 @@ function Adminrevenue() {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        dispatch(loadSpinner());
       });
   }, []);
 
@@ -363,27 +326,6 @@ function Adminrevenue() {
               cliked={handliSubmit}
               img={
                 <svg
-                  width="18"
-                  height="15"
-                  viewBox="0 0 18 15"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13.9424 4.05659C13.3546 4.05105 12.7618 4.21314 12.2175 4.48907L12.2075 4.49416L13.9382 4.55657M13.9424 4.05659C13.9426 4.05659 13.9428 4.05659 13.943 4.05659L13.9382 4.55657M13.9424 4.05659C13.9422 4.05658 13.942 4.05658 13.9418 4.05658L13.9382 4.55657M13.9424 4.05659C15.512 4.0682 16.5011 5.27837 16.9167 6.59169C17.332 7.9038 17.2511 9.51358 16.5175 10.6309M13.9382 4.55657C16.4657 4.57478 17.3619 8.4343 16.0993 10.3567M16.5175 10.6309C16.5176 10.6307 16.5177 10.6306 16.5177 10.6305L16.0993 10.3567M16.5175 10.6309C15.9467 11.503 14.9662 12.3931 13.9731 12.6663L13.908 12.6842H13.8405H13.7748M16.5175 10.6309C16.5174 10.631 16.5173 10.6311 16.5173 10.6312L16.0993 10.3567M16.0993 10.3567L13.7748 12.6842M13.7748 12.6842C13.7785 12.5175 13.7757 12.3507 13.7662 12.1842H13.8405L13.7748 12.6842ZM13.7748 12.6842C13.7732 12.7547 13.7705 12.8252 13.7665 12.8956M13.7748 12.6842H13.2747C13.273 12.7547 13.27 12.8252 13.2657 12.8956H13.7665M12.2046 3.72679C12.1828 3.7374 12.161 3.74815 12.1393 3.75902L12.2046 3.72679ZM12.2046 3.72679L11.9858 3.27719C11.9776 3.28123 11.9693 3.28528 11.961 3.28935C12.048 3.42858 12.1294 3.57443 12.2046 3.72679ZM3.64604 5.14875C3.64602 5.14887 3.646 5.14898 3.64598 5.14909L3.63372 5.22218L3.61189 5.2266C3.61169 5.22664 3.61149 5.22668 3.61129 5.22672C3.22887 5.30313 2.87772 5.41054 2.56229 5.55144C0.505315 6.46207 0.00427652 9.02757 1.18955 10.8994L1.19025 10.9005C1.42352 11.2668 1.70518 11.6635 2.04209 11.9886C2.37904 12.3137 2.80096 12.5959 3.31565 12.6779L3.35475 12.6842H3.39433H3.94064C3.94221 12.755 3.94495 12.8254 3.94886 12.8956H3.4026L3.37272 12.8926C2.54743 12.7677 1.78757 12.0367 1.17974 11.0743L1.17903 11.0732C-0.150428 8.98053 0.544107 6.24332 2.58965 5.3363L2.59068 5.33584C2.81179 5.2372 3.05124 5.15356 3.30678 5.08578L3.60135 5.00765L3.66689 4.71004C3.96267 3.36709 4.58697 2.35539 5.37035 1.66164L5.3704 1.66159C7.7606 -0.455698 11.3874 0.403656 12.798 3.60909L12.9567 3.96974L13.3444 3.89975C13.5463 3.86331 13.7448 3.84559 13.9385 3.84828L13.9412 3.8483C15.3648 3.86031 16.4196 4.90069 16.924 6.37593C17.4298 7.855 17.3158 9.61318 16.53 10.806C15.8704 11.8064 14.8823 12.6217 13.9177 12.8884L13.8652 12.8956H13.7665M5.684 2.24537L5.3526 1.87097C5.35241 1.87114 5.35222 1.87131 5.35203 1.87147L5.684 2.24537Z"
-                    fill={border === "Cloud" ? "yellow" : "white"}
-                    stroke={border === "Cloud" ? "yellow" : "white"}
-                  />
-                </svg>
-              }
-              name={"Cloud"}
-            />
-
-            <Button
-              bordercolur={border}
-              cliked={handliSubmit}
-              img={
-                <svg
                   width="20"
                   height="15"
                   viewBox="0 0 20 15"
@@ -423,9 +365,7 @@ function Adminrevenue() {
             />
           </div>
 
-          {border === "Cloud" ? (
-            <CloudTable data={cloudData} loading={loading} />
-          ) : border === "Orders" ? (
+          {border === "Orders" ? (
             <OrederTable data={orderData} loading={loading} />
           ) : border === "Banner Section" ? (
             <BAnnerSection data={bannerData} loading={loading} />

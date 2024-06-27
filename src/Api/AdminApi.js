@@ -266,6 +266,24 @@ export const actionOnVendor = async (id) => {
 export const getTopVendors = async (page) => {
   return await EcomUpdatedInstance.get(`admin/topVendors?page=${page}`);
 };
+export const getVendorProduct = async (id, searchKey,page) => {
+  return await EcomUpdatedInstance.get(`admin/getVendorProduct?id=${id}&page=${page}&search=${searchKey}`);
+};
+
+export const activeProduct = async (productId) => {
+  return await EcomUpdatedInstance.post(`admin/activeProduct`, { productId });
+};
+
+export const changeCommissionSingle = async (productId, commission) => {
+  console.log("productId, commission: ", productId, commission)
+  return await EcomUpdatedInstance.post(`admin/change-product-commission`, { productId, commission });
+};
+
+export const changeCommissionAll = async (vendorId, commission) => {
+  console.log("vendorId, commission: ", vendorId, commission)
+  return await EcomUpdatedInstance.post(`admin/change-venodr-all-product-commission`, { vendorId, commission });
+};
+
 /////////////////////////////////////////Customers////////////////////////////////////////
 export const adminRemindNotification = async (data) => {
   return await EcomUpdatedInstance.post("admin/sendNotification", data);
@@ -279,17 +297,20 @@ export const getAdminCustomers = async (activeButton, page) => {
 };
 /////////////////////////////////////////Coupons////////////////////////////////////////
 export const adminAddCoupons = async (data) => {
-  return await EcomUpdatedInstance.post("admin/coupon", data);
+  return await EcomUpdatedInstance.post(`admin/coupon`, data);
 };
 export const adminGetCoupons = async (page) => {
   return await EcomUpdatedInstance.get(`admin/coupons?page=${page}`);
 };
 export const adminBlockOrUnblock = async (couponId) => {
-  return await EcomUpdatedInstance.put("admin/coupon", { couponId: couponId });
+  return await EcomUpdatedInstance.put(`admin/coupon`, {
+    couponId: couponId,
+  });
 };
-export const deleteCoupon = async (id,role) => {
+export const deleteCoupon = async (id, role) => {
   return await EcomUpdatedInstance.delete(`${role}/coupon/${id}`);
 };
+
 /////////////////////////////////////////Revenue////////////////////////////////////////
 export const adminCloudRevenuetable = async (page) => {
   return await EcomUpdatedInstance.get(`admin/cloudDetails?page=${page}`);
@@ -307,7 +328,9 @@ export const adminrevenuebenner = async (page) => {
   return await EcomUpdatedInstance.get(`admin/bannerDetails?page=${page}`);
 };
 export const getBannerRevenue = async (bannerkey) => {
-  return await EcomUpdatedInstance.get(`admin/revenue/banner?filter=${bannerkey}`);
+  return await EcomUpdatedInstance.get(
+    `admin/revenue/banner?filter=${bannerkey}`
+  );
 };
 export const getCloudRevenue = async (cloud) => {
   return await EcomUpdatedInstance.get(`admin/revenue/cloud?filter=${cloud}`);
@@ -319,7 +342,9 @@ export const getRevenueOrderDetails = async (orders) => {
   return await EcomUpdatedInstance.get(`admin/revenue/orders?filter=${orders}`);
 };
 export const specialDealrevenue = async (Spciel) => {
-  return await EcomUpdatedInstance.get(`admin/revenue/specialDeals?filter=${Spciel}`);
+  return await EcomUpdatedInstance.get(
+    `admin/revenue/specialDeals?filter=${Spciel}`
+  );
 };
 export const geytgraphdataofRevenue = async (year) => {
   console.log(year);

@@ -27,12 +27,11 @@ function TopNavBar() {
   });
   let admin = localStorage.getItem("Userdata");
   console.log(admin);
-  const userDetailsString = localStorage.getItem("Userdetails");
+  const userDetailsString = localStorage.getItem("encryptedToken");
   let userDetails;
   if (userDetailsString) {
     try {
       userDetails = JSON.parse(userDetailsString);
-      console.log(userDetails.email, userDetails.img);
     } catch (e) {
       console.error("Error parsing user details:", e);
     }
@@ -79,9 +78,9 @@ function TopNavBar() {
           <div
             className={`${
               t.isVisible ? "animate-enter" : "animate-leave"
-            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            } max-w-md w-full  shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
-            <div className="flex-1 w-0 p-4">
+            <div className="flex-1 w-0 p-4 ">
               <div className="flex items-start">
                 <div className="ml-3 flex-1">
                   <p className="text-sm font-medium text-gray-900">

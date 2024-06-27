@@ -4,13 +4,13 @@ function Card({ img, firstText, data, trans,currency }) {
   
   console.log(trans, "))))))))))))))");
   return (
-    <div className="bg-containerWhite p-4 rounded-xl shadow-md">
+    <div className="bg-containerWhite p-4 rounded-xl shadow-md ">
       <div className="flex gap-8 items-center">
         <div className="w-7 ">{img}</div>
         <p className="font-semibold text-white">{firstText}</p>
       </div>
       <div className="flex items-center gap-4 mt-5">
-        <h1 className="font-bold text-xl">
+        <h1 className="font-bold text-xl text-textColor">
           {trans ? "" : currency}
           {data?.amount >= 0 && data?.amount != undefined
             ? data?.amount?.toFixed(1)
@@ -18,7 +18,7 @@ function Card({ img, firstText, data, trans,currency }) {
         </h1>
       </div>
       <div className="flex pt-2 gap-3">
-        <p className="flex gap-1 items-center text-white">
+        <p className="flex gap-1 items-center text-textColor">
           <svg
             width="12"
             height="14"

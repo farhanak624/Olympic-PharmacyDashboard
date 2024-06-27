@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { inputNumberPreventScroll } from "../../Utils/utils";
+import { addCoupons, adminAddCoupons } from "../../Api/AdminApi";
+import { loadSpinner } from "../../Redux/Features/NavbarSlice";
 
 const AdminAddCouponModal = ({ callback, admin }) => {
   const dispatch = useDispatch();
@@ -66,16 +68,18 @@ const AdminAddCouponModal = ({ callback, admin }) => {
       try {
         if (admin) {
           const response = await adminAddCoupons(wholeData);
-          // dispatch(loadSpinner());
+          console.log("response", response);
+          dispatch(loadSpinner());
           callback();
           toast.success("Coupon added successfully");
-          // dispatch(loadSpinner());
+          dispatch(loadSpinner());
         } else {
           const response = await addCoupons(wholeData);
-          // dispatch(loadSpinner());
+          console.log("response", response);
+          dispatch(loadSpinner());
           callback();
           toast.success("Coupon added successfully");
-          // dispatch(loadSpinner());
+          dispatch(loadSpinner());
         }
       } catch (error) {
         console.log("sssssss", error);
@@ -276,7 +280,7 @@ const AdminAddCouponModal = ({ callback, admin }) => {
               id="noOf"
               name="noOf"
               onChange={(e) => setNoOfUsers(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 bg-subContainerColor focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full text-textColor px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 bg-subContainerColor focus:border-indigo-500 sm:text-sm"
               placeholder="5"
             />
             {errors.noOfUsers && (

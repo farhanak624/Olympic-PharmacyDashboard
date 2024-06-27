@@ -28,7 +28,7 @@ export const uploadImageV2 = async (imageFile, onUploadProgress) => {
     const formData = new FormData();
     formData.append("image", imageFile);
     const response = await axios.post(
-      process.env.REACT_APP_IMAGE_BASEURL,
+      import.meta.env.VITE_REACT_APP_IMAGE_BASEURL,
       // "http://localhost:3000/upload",
 
       formData,

@@ -7,3 +7,31 @@
   outline: none; /* Remove the outline */
 }
 /*  */
+.react-datepicker__header {
+  background-color: #000000; /* Black header background */
+  border-bottom: 1px solid #ffdd11; /* Yellow bottom border */
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  color: #ffdd11; /* Yellow text */
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__day--today {
+  background-color: #ffdd11; /* Yellow background */
+  color: #000000; /* Black text */
+}
+
+.react-datepicker__navigation--previous,
+.react-datepicker__navigation--next {
+  border-color: #ffdd11; /* Yellow navigation buttons */
+}
+
+.react-datepicker__day:hover {
+  background-color: #ffdd11; /* Yellow background on hover */
+  color: #000000; /* Black text on hover */
+}

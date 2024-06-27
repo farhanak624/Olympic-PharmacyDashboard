@@ -115,7 +115,7 @@ const VendorRequests = () => {
               </tr>
             ) : requests.length === 0 ? (
               <tr>
-                <td colSpan="9" className="text-black text-center py-3">
+                <td colSpan="9" className="text-red-700 text-center py-3">
                   No data available
                 </td>
               </tr>

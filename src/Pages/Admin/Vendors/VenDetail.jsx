@@ -1,9 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import VenOverview from "./VenOverview";
 import VenProducts from "./VenProducts";
-import { useNavigate, useParams } from "react-router-dom";
 
-import { getVendorDetails } from "../../../../Api/ApiCall";
 const VenDetail = () => {
   const navigate = useNavigate();
   const [activeButton, setActiveButton] = useState("overview");
@@ -36,7 +35,7 @@ const VenDetail = () => {
         </div> */}
       </div>
       <div className="bg-containerWhite w-full rounded-xl min-h-[600px] shadow-sm p-4">
-        <button
+        {/* <button
           onClick={() => navigate("/admin/vendors")}
           className="flex items-center  border border-gray-100 cursor-pointer w-[100px] shadow-md justify-center font-bold gap-2 mb-4"
         >
@@ -47,14 +46,14 @@ const VenDetail = () => {
             </span>{" "}
             <p className="mt-1 ml-2">Back</p>
           </div>
-        </button>
+        </button> */}
         <div className="flex justify-between mb-4">
           <div className="flex">
             <div
               className={`rounded-l-xl cursor-pointer text-xs text-center px-2 py-2 ${
                 activeButton === "overview"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100"
+                  ? "bg-navblue text-textColor2"
+                  : "bg-subContainerColor text-textColor"
               }`}
               onClick={() => handleButtonClick("overview")}
             >
@@ -63,8 +62,8 @@ const VenDetail = () => {
             <div
               className={`rounded-r-xl cursor-pointer text-xs text-center px-2 py-2 ${
                 activeButton === "products"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100"
+                  ? "bg-navblue text-textColor2"
+                  : "bg-subContainerColor text-textColor"
               }`}
               onClick={() => handleButtonClick("products")}
             >

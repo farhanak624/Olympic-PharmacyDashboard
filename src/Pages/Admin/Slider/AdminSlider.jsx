@@ -393,7 +393,7 @@ function AdminSlider() {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-textColor">
               {addSlider && (
                 <tr className="" style={{ height: "50px" }}>
                   <td>
@@ -667,7 +667,7 @@ function AdminSlider() {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-textColor">
               {bannersData?.length > 0 &&
                 bannersData.map((data) => {
                   // console.log(data, "**************************");
@@ -680,14 +680,14 @@ function AdminSlider() {
                           alt=""
                         />
                       </td>
-                      <td className="px-5 py-3  text-center  text-xs font-semibold text-gray-600 capitalize tracking-wider">
-                        {data?.category?.name}
+                      <td className="px-5 py-3  text-center  text-xs font-semibold  capitalize tracking-wider">
+                        {data?.category?.name ? data?.category?.name : "N/A"}
                       </td>
 
-                      <td className="px-5 py-3  text-center  text-xs font-semibold text-gray-600 capitalize tracking-wider">
-                        {data?.position}
+                      <td className="px-5 py-3  text-center  text-xs font-semibold  capitalize tracking-wider">
+                        {data?.position ? data?.position : "top"}
                       </td>
-                      <td className="px-5 py-3  text-center  text-xs font-semibold text-gray-600 capitalize tracking-wider">
+                      <td className="px-5 py-3  text-center  text-xs font-semibold  capitalize tracking-wider">
                         {localdate(data?.validity)}
                       </td>
 

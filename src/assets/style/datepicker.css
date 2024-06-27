@@ -1,0 +1,27 @@
+.custom-calendar {
+  background-color: #ffdd11;
+  color: black;
+}
+
+.custom-calendar .react-datepicker__header {
+  background-color: #ffdd11;
+  border-bottom: none;
+}
+
+.custom-calendar .react-datepicker__current-month,
+.custom-calendar .react-datepicker__day-name,
+.custom-calendar .react-datepicker__day,
+.custom-calendar .react-datepicker__time-name {
+  color: rgb(255, 255, 255);
+}
+
+.custom-calendar .react-datepicker__day--selected,
+.custom-calendar .react-datepicker__day--keyboard-selected {
+  background-color: black;
+  color: #ffdd11;
+}
+
+.custom-calendar .react-datepicker__day--today {
+  background-color: #ffd700;
+  color: rgb(0, 0, 0);
+}

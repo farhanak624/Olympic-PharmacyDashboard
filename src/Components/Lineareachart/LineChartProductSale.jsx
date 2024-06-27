@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ApexCharts from "apexcharts";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Datepicker from "./Datepicker";
-import { getVendorSalesAnalysis } from "../../Api/ApiCall";
 const LineChartProductSale = ({ salesAnalysis, selected, setselected }) => {
   const [data, setData] = useState({});
   const [salesData, setSalesData] = useState({});

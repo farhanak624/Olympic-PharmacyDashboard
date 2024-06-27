@@ -2,8 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { adminBlockOrUnblock, adminGetCoupons } from "../../../Api/AdminApi";
+import {
+  adminBlockOrUnblock,
+  adminGetCoupons,
+  deleteCoupon,
+} from "../../../Api/AdminApi";
 import AdminAddCouponModal from "../../../Components/Modal/CreateCouponModalAdmin";
+import { loadSpinner } from "../../../Redux/Features/NavbarSlice";
 
 const Coupons = () => {
   const dispatch = useDispatch();
@@ -54,7 +59,7 @@ const Coupons = () => {
   }, [loader, totalpages]);
   const getAllcouponList = async (page) => {
     setCouponList([]);
-    // dispatch(loadSpinner())
+    dispatch(loadSpinner());
     adminGetCoupons(page)
       .then((res) => {
         const newCoupons = res?.data?.coupons || [];
@@ -65,7 +70,7 @@ const Coupons = () => {
         console.log(err);
       })
       .finally(() => {
-        // dispatch(loadSpinner())
+        dispatch(loadSpinner());
       });
   };
   const couponStatusChange = async (couponId) => {
@@ -107,7 +112,7 @@ const Coupons = () => {
           </div>
           <button
             onClick={() => setCreateModal(true)}
-            className="bg-navblue border shadow hover:bg-yellow-800 text-black font-semibold py-2 px-4 rounded"
+            className="bg-navblue shadow hover:bg-yellow-800 text-black font-semibold py-2 px-4 rounded"
           >
             Create Coupon
           </button>
@@ -116,7 +121,7 @@ const Coupons = () => {
           <AdminAddCouponModal admin={true} callback={callback} />
         )}
         <div className="overflow-x-auto">
-          <table className="min-w-full  leading-normal">
+          <table className="min-w-full  leading-normal border ">
             <thead>
               <tr>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-subContainerColor text-white text-left text-xs font-semibold tracking-wider rounded-s-xl">
@@ -154,38 +159,36 @@ const Coupons = () => {
                 CouponList.map((coupon) => {
                   return (
                     <tr>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <td className="px-5 py-5 bg-containerWhite text-textColor text-sm">
                         <div className="flex items-center">
                           <div className="ml-3">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              {coupon?.name}
-                            </p>
+                            <p className="whitespace-no-wrap">{coupon?.name}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <td className="px-5 py-5  bg-containerWhite text-textColor text-sm">
                         {new Date(
                           coupon?.validity?.startDate
                         ).toLocaleDateString()}
                       </td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <td className="px-5 py-5  bg-containerWhite text-textColor text-sm">
                         {new Date(
                           coupon?.validity?.endDate
                         ).toLocaleDateString()}
                       </td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <td className="px-5 py-5  bg-containerWhite text-textColor text-sm">
                         {coupon?.currency} {coupon?.minPrice}
                       </td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <td className="px-5 py-5  bg-containerWhite text-textColor text-sm">
                         {coupon?.discount}
                       </td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <td className="px-5 py-5  bg-containerWhite text-textColor text-sm">
                         {coupon.discountType}
                       </td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <td className="px-5 py-5  bg-containerWhite text-textColor text-sm">
                         {coupon?.maximumCount.userCount}
                       </td>
-                      <td className="px-5 border-gray-200 py-5 border-b bg-white text-sm">
+                      <td className="px-5 border-gray-200 py-5 bg-containerWhite text-sm">
                         {coupon?.activeStatus ? (
                           <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
                             <span
@@ -204,7 +207,7 @@ const Coupons = () => {
                           </span>
                         )}
                       </td>
-                      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <td className="px-5 py-5 bg-containerWhite text-sm">
                         <div className="flex justify-center">
                           <button className="text-blue-500 hover:text-blue-700">
                             <label className="inline-flex items-center cursor-pointer">
@@ -214,19 +217,22 @@ const Coupons = () => {
                                 checked={coupon?.activeStatus} // This will set the toggle "on" if activeStatus is true
                                 onChange={() => couponStatusChange(coupon._id)}
                               />
-                              <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                              <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-navblue dark:peer-focus:ring-navblue rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-navblue"></div>{" "}
                             </label>
                           </button>
                           <button
                             onClick={(e) => {
                               e.stopPropagation(); // Prevent click from bubbling to the card div
                               Swal.fire({
+                                background: "#000", // Set background to black
+                                color: "#ffdd11", // Set text color to #ffdd11
                                 title: "Are you sure?",
                                 text: `Do you want to delete this coupon ${coupon?.name}  !`,
                                 icon: "warning",
+                                iconColor: "#ffdd11", // Set icon color to #ffdd11
                                 showCancelButton: true,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
+                                confirmButtonColor: "#ffdd11", // Set confirm button color to #ffdd11
+                                cancelButtonColor: "#000", // Set cancel button color to black
                                 confirmButtonText: "Yes, delete it!",
                               }).then((result) => {
                                 if (result.isConfirmed) {
@@ -235,21 +241,29 @@ const Coupons = () => {
                                   deleteCoupon(coupon?._id, "admin")
                                     .then((data) => {
                                       if (result.isConfirmed) {
+                                        Swal.fire({
+                                          background: "#000", // Set background to black
+                                          color: "#ffdd11", // Set text color to #ffdd11
+                                          title: "Deleted!",
+                                          text: "Your Coupon has been deleted.",
+                                          icon: "success",
+                                          iconColor: "#ffdd11", // Set icon color to #ffdd11
+                                          confirmButtonColor: "#ffdd11", // Set confirm button color to #ffdd11
+                                        });
+                                        getAllcouponList();
                                       }
-                                      Swal.fire(
-                                        "Deleted!",
-                                        "Your Coupon has been deleted.",
-                                        "success"
-                                      );
-                                      getAllcouponList();
                                     })
                                     .catch((err) => {
                                       toast.error(err.response.data.message);
-                                      Swal(
-                                        "Sorry!",
-                                        err.response.data.message,
-                                        "error"
-                                      );
+                                      Swal.fire({
+                                        background: "#000", // Set background to black
+                                        color: "#ffdd11", // Set text color to #ffdd11
+                                        title: "Sorry!",
+                                        text: err.response.data.message,
+                                        icon: "error",
+                                        iconColor: "#ffdd11", // Set icon color to #ffdd11
+                                        confirmButtonColor: "#ffdd11", // Set confirm button color to #ffdd11
+                                      });
                                     });
 
                                   // For demonstration purposes, let's just log the deletion

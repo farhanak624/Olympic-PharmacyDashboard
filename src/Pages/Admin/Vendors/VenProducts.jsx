@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { getVendorProduct, activeProduct } from "../../../../Api/ApiCall";
-import Loading from "../../../LodingDiv/LoaderSmall";
 import CommissionModal from "./CommissionModal";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
-import { loadSpinner } from "../../../../Redux/Features/NavbarSlice";
-import { debounce } from "chart.js/helpers";
+import { debounce } from "lodash";
+import { activeProduct, getVendorProduct } from "../../../Api/AdminApi";
+import { loadSpinner } from "../../../Redux/Features/NavbarSlice";
 
 const VenProducts = ({ id }) => {
   const dispatch = useDispatch();
@@ -23,7 +22,7 @@ const VenProducts = ({ id }) => {
       setSearchKey(value);
       setProducts([]);
       setPages(1);
-      getProducts(id, value, 1,true);
+      getProducts(id, value, 1, true);
     }, 300),
     []
   );
@@ -94,11 +93,14 @@ const VenProducts = ({ id }) => {
               : prod
           )
         );
-        Swal.fire(
-          `${action.charAt(0).toUpperCase() + action.slice(1)}`,
-          `Product has been ${action}.`,
-          "success"
-        );
+        Swal.fire({
+          background: "#000", // Set background to black
+          color: "#ffdd11", // Set text color to #ffdd11
+          title: `${action.charAt(0).toUpperCase() + action.slice(1)}`,
+          text: `Product has been ${action}.`,
+          icon: "success",
+          confirmButtonColor: "#ffdd11",
+        });
       })
       .catch((error) => {
         console.error("Error updating product status:", error);
@@ -129,15 +131,15 @@ const VenProducts = ({ id }) => {
       <div className="flex justify-end">
         <input
           type="text"
-          className="w-1/4 h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className="w-1/4 h-10 px-3 bg-subContainerColor text-textColor rounded-md focus:outline-none focus:ring-2 focus:ring-navblue"
           placeholder="Search Product.."
           onChange={(e) => debouncedSearch(e.target.value)}
         />
       </div>
-      <div className="mt-8 overflow-x-auto border rounded-xl shadow-md">
+      <div className="mt-8 overflow-x-auto rounded-xl shadow-md">
         <div className="table-responsive">
           <table className="table align-middle table-nowrap mb-0 h-9 w-full text-sm">
-            <thead className="bg-gray-100 h-10">
+            <thead className="bg-subContainerColor text-textColor h-10">
               <tr>
                 <th>Product Details</th>
                 <th>Category</th>
@@ -149,7 +151,7 @@ const VenProducts = ({ id }) => {
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-textColor">
               {products.length > 0 ? (
                 products?.map((product, index) => (
                   <tr
@@ -171,11 +173,11 @@ const VenProducts = ({ id }) => {
                     </td>
                     <td className="text-center py-3">
                       <div className="flex flex-wrap justify-center gap-1">
-                        <div className="bg-gray-200 rounded-md px-2 py-1 overflow-hidden whitespace-nowrap text-xs">
+                        <div className="bg-subContainerColor rounded-md px-2 py-1 overflow-hidden whitespace-nowrap text-xs">
                           {product?.category}
                         </div>
                         {/* {product?.category?.map((category, index) => (
-                                                <div key={index} className="bg-gray-200 rounded-md px-2 py-1 overflow-hidden whitespace-nowrap text-xs">
+                                                <div key={index} className="bg-subContainerColor rounded-md px-2 py-1 overflow-hidden whitespace-nowrap text-xs">
                                                     {category}
                                                 </div>
                                             ))} */}
@@ -186,7 +188,7 @@ const VenProducts = ({ id }) => {
                         {product?.details.map((option, index) => (
                           <div
                             key={index}
-                            className="bg-gray-200 rounded-full px-2 py-1 overflow-hidden whitespace-nowrap text-xs"
+                            className="bg-subContainerColor rounded-full px-2 py-1 overflow-hidden whitespace-nowrap text-xs"
                           >
                             {option?.size}
                           </div>
@@ -218,6 +220,8 @@ const VenProducts = ({ id }) => {
                         onClick={(e) => {
                           e.stopPropagation();
                           Swal.fire({
+                            background: "#000",
+                            color: "#ffdd11",
                             title: "Are you sure?",
                             text: `You want ${
                               product.activeStatus === true
@@ -226,8 +230,8 @@ const VenProducts = ({ id }) => {
                             } this product!`,
                             icon: "warning",
                             showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
+                            confirmButtonColor: "#FFDD11",
+                            cancelButtonColor: "#000",
                             confirmButtonText: "Yes",
                           }).then((result) => {
                             if (result.isConfirmed) {
@@ -237,8 +241,8 @@ const VenProducts = ({ id }) => {
                         }}
                         className={`w-10 h-6 rounded-full focus:outline-none ${
                           product?.activeStatus === true
-                            ? "bg-blue-600"
-                            : "bg-gray-300"
+                            ? "bg-navblue"
+                            : "bg-subContainerColor"
                         }`}
                       >
                         <div

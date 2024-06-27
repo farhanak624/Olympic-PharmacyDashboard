@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import curlyWave from "../../assets/images/curlyWave.png";
 import loginFrame from "../../assets/images/loginFrame.png";
 import { ToastContainer, toast } from "react-toastify";
-import { ClipLoader } from "react-spinners";
+import { ClipLoader, PuffLoader } from "react-spinners";
 import { LoginUserdata, userLogin } from "../../Api/AdminApi";
 import { requestForToken } from "../../Firebase/FirebaseConfig";
 // import "../Pages/login.css"
@@ -173,7 +173,7 @@ const LoginIn = () => {
       </section>
       {isLoading ? (
         <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50">
-          <ClipLoader
+          <PuffLoader
             color={color}
             loading={isLoading}
             cssOverride={override}

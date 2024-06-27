@@ -7,7 +7,7 @@ function SpecialDeals({ data, loading }) {
       <table className="min-w-full  leading-normal">
         <thead className="bg-gray-100">
           <tr>
-            <th className="px-5 py-3  bg-gray-100 text-left text-xs font-semibold text-gray-600 capitalize tracking-wider ">
+            <th className="px-5 py-3  bg-subContainerColor text-left text-xs font-semibold text-textColor capitalize tracking-wider ">
               <div className="flex gap-1 items-center">
                 <svg
                   width="15"
@@ -24,7 +24,7 @@ function SpecialDeals({ data, loading }) {
                 product name
               </div>
             </th>
-            <th className="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 capitalize tracking-wider">
+            <th className="px-5 py-3 bg-subContainerColor text-left text-xs font-semibold text-textColor capitalize tracking-wider">
               <div className="flex gap-1 items-center">
                 <svg
                   width="21"
@@ -45,7 +45,7 @@ function SpecialDeals({ data, loading }) {
                 product prize
               </div>
             </th>
-            <th className="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 capitalize tracking-wider">
+            <th className="px-5 py-3 bg-subContainerColor text-left text-xs font-semibold text-textColor capitalize tracking-wider">
               <div className="flex gap-1 items-center">
                 <svg
                   width="20"
@@ -62,7 +62,7 @@ function SpecialDeals({ data, loading }) {
                 discount (%)
               </div>
             </th>
-            <th className="px-5 py-3  bg-gray-100 text-left text-xs font-semibold text-gray-600 capitalize tracking-wider">
+            <th className="px-5 py-3  bg-subContainerColor text-left text-xs font-semibold text-textColor capitalize tracking-wider">
               <div className="flex gap-1 items-center">
                 <svg
                   width="16"
@@ -79,7 +79,7 @@ function SpecialDeals({ data, loading }) {
                 starting on
               </div>
             </th>
-            <th className="px-5 py-3  bg-gray-100 text-left text-xs font-semibold text-gray-600 capitalize tracking-wider ">
+            <th className="px-5 py-3  bg-subContainerColor text-left text-xs font-semibold text-textColor capitalize tracking-wider ">
               <div className="flex gap-1 items-center">
                 <svg
                   width="16"
@@ -99,7 +99,7 @@ function SpecialDeals({ data, loading }) {
           </tr>
         </thead>
         <tbody className="capitalize">
-          {data.length > 0 &&
+          {data?.length > 0 ?
             data?.map((data) => {
               console.log(data);
               return (
@@ -122,7 +122,11 @@ function SpecialDeals({ data, loading }) {
                   <td className="px-7 py-3">{formatDate(data?.expiresOn)}</td>
                 </tr>
               );
-            })}
+            }):(
+            <tr className="text-center text-red-700">
+              <td colSpan="5">No Data Found</td>
+            </tr>
+            )}
         </tbody>
       </table>
       {/* {loading && (
@@ -130,9 +134,7 @@ function SpecialDeals({ data, loading }) {
           <img src="/loading.gif" className="w-32" alt="" />
         </div>
       )} */}
-      {data.length < 1 && !loading && (
-        <div className="text-red-500 text-center p-4">Oops No Data</div>
-      )}
+      
     </div>
   );
 }

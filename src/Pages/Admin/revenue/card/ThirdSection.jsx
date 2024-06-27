@@ -10,8 +10,11 @@ import {
   specialDealrevenue,
 } from "../../../../Api/AdminApi";
 import { PieChart } from "@mui/x-charts";
+import { loadSpinner } from "../../../../Redux/Features/NavbarSlice";
+import { useDispatch } from "react-redux";
 
 export default function ThirdSection() {
+  const dispatch = useDispatch();
   const [orederRevenue, setOrderRevenue] = useState({});
   const [drop, setDrop] = useState(false);
   const [coludData, setCloudData] = useState({});
@@ -26,6 +29,7 @@ export default function ThirdSection() {
   const [drop2, setDrp2] = useState(false);
   const [orederKey, setOrderKey] = useState("lastWeek");
   const [orederKey1, setOrderkey1] = useState("This Year");
+  const [filteredData, setFilteredData] = useState([]);
   useEffect(() => {
     getCloudRevenue(cloudkeyword)
       .then((data) => {
@@ -64,18 +68,25 @@ export default function ThirdSection() {
   useEffect(() => {
     getColorGraph(colorgraphkey)
       .then((data) => {
-        console.log(data?.data?.incomeArray);
+        dispatch(loadSpinner());
+        let filteredData = data?.data?.incomeArray.filter(
+          (data) => data?.source !== "Cloud" && data?.source !== "Flicks"
+        );
+        setFilteredData(filteredData);
         setColorGraphData(data?.data);
         setcolorgraphArray(data?.data?.incomeArray);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        dispatch(loadSpinner());
+      });
   }, [colorgraphkey]);
   const [keyWord1, setKeyWord1] = useState("");
   const [keyWord2, setKeyWord2] = useState("");
   const Symbol = useContext(UserContext);
   return (
     <div className="flex md:flex-row flex-col mt-5 gap-8">
-      <div className="bg-containerWhite max-w-[600px] w-full rounded-lg p-4">
+      <div className="bg-containerWhite max-w-[600px] w-full rounded-lg p-4 text-textColor">
         <div className="p-1 mb-3 flex justify-between">
           <p className="font-bold text-white">All Income</p>
           <DropDown
@@ -87,12 +98,15 @@ export default function ThirdSection() {
             setkeyword={setColorgraphkey}
           />
         </div>
-        <div className=" w-full  lg:flex-row flex-col  flex gap-4 ">
+        <div className=" w-full  lg:flex-row flex-col h-[250px] flex  gap-4">
           <div className="progress lg:ml-0 md:ml-0 ml-10  w-[205px]  flex items-center justify-center gap-4">
             <PieChart
               series={[
                 {
-                  data: colorgrapharray,
+                  data: colorgrapharray.filter(
+                    (data) =>
+                      data?.source !== "Cloud" && data?.source !== "Flicks"
+                  ),
                   innerRadius: 70,
                   outerRadius: 100,
                   paddingAngle: 1,
@@ -110,7 +124,7 @@ export default function ThirdSection() {
                 y="45%"
                 dominantBaseline="middle"
                 textAnchor="middle"
-                fill="black"
+                fill="white"
               >
                 {Symbol} {colorGraphData?.totalIncome?.toFixed()}
               </text>
@@ -127,7 +141,7 @@ export default function ThirdSection() {
             </PieChart>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-2 ml-5 md:grid-cols-1 gap-4">
-            {colorgrapharray.map((data) => {
+            {filteredData?.map((data) => {
               return (
                 <div className="flex gap-2  items-center w-full">
                   <div
@@ -142,7 +156,7 @@ export default function ThirdSection() {
         </div>
       </div>
       <div className=" p-4 w-full">
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1">
           {/* <ThirdSectionCard
             keword={cloudkeyword}
             setkeyword={setCloudKeyword}

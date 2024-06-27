@@ -2,6 +2,7 @@ import React from "react";
 import VendorSidebar from "../../Navbar/Side/VendorSidebar";
 import TopNavBar from "../../Navbar/Top/TopNavBar";
 import { Outlet } from "react-router-dom";
+import SpinningLoader from "../../Loader/SpinningLoader";
 
 const VendorLayout = () => {
   return (
@@ -13,6 +14,7 @@ const VendorLayout = () => {
           <Outlet />
         </main>
       </div>
+      <SpinningLoader />
     </div>
   );
 };

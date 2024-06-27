@@ -57,7 +57,7 @@ const LineAreaChart = () => {
         {
           name: "Max Gain",
           data: data.sales,
-          color: "rgba(166, 179, 255, 1)",
+          color: "rgba(255, 221, 17, 1)",
         },
       ],
       chart: {
@@ -81,7 +81,7 @@ const LineAreaChart = () => {
           var data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
 
           return (
-            "<ul style='background-color: rgba(166, 179, 255, 1); text-align: center; padding: 10px; font-size: 16px; border:none;'>" +
+            "<ul style='background-color: rgba(255, 221, 17, 1); text-align: center; padding: 10px; font-size: 16px; border:none;'>" +
             "<li style='color: gray;'>" +
             name +
             "</li>" +
@@ -136,8 +136,8 @@ const LineAreaChart = () => {
 
         <div className="">
           <div
-            className="p-1.5 relative flex justify-between min-w-[20%] items-center rounded-lg cursor-pointer"
-            style={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}
+            className="p-1.5 relative flex justify-between min-w-[20%] items-center rounded-lg cursor-pointer bg-secondoryBackground text-textColor"
+            
             onClick={() => setdropdown(!dropdown)}
           >
             <p className="px-2">{selected}</p>
@@ -157,8 +157,8 @@ const LineAreaChart = () => {
 
             {dropdown && (
               <ul
-                style={{ backgroundColor: "rgba(0, 0, 0, 0.05)", zIndex: 999 }}
-                className="absolute top-9 w-full bg-black rounded-md left-0 hover:cursor-pointer"
+                style={{ zIndex: 999 }}
+                className="absolute top-9 w-full bg-secondoryBackground text-textColor rounded-md left-0 hover:cursor-pointer"
               >
                 <li
                   className="p-1 flex justify-center hover:bg-gray-600 hover:text-white hover:rounded-md"
