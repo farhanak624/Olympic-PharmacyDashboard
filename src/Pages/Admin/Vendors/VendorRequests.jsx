@@ -1,12 +1,16 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { approveVendor, getVendorRequests, rejectVendor } from "../../../Api/AdminApi";
+import {
+  approveVendor,
+  getVendorRequests,
+  rejectVendor,
+} from "../../../Api/AdminApi";
 import Loader from "../../../Components/Loader/Loader";
 
 const VendorRequests = () => {
-  const [selectedVendor, setSelectedVendor] = useState(null); // State to track the selected vendor
+  const [selectedVendor, setSelectedVendor] = useState(null);
   const [requests, setRequests] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -16,12 +20,13 @@ const VendorRequests = () => {
 
   useEffect(() => {
     setIsLoading(true);
+    setRequests([]); // Clear previous requests when starting a new load
     getVendorRequests(page)
       .then((data) => {
         console.log("data in getVendorRequests", data);
         const vendors = data?.data?.Vendors;
         if (Array.isArray(vendors)) {
-          setRequests((prevData) => [...prevData, ...vendors]);
+          setRequests(vendors); // Set the requests to the fetched vendors directly
           setTotalCount(data?.data?.totalRequestedVendors);
         } else {
           console.log("No vendors found");
@@ -34,18 +39,22 @@ const VendorRequests = () => {
       });
   }, [page]);
 
-  const handleScroll = () => {
-    // Detect when user has scrolled to the bottom
+  const handleScroll = useCallback(() => {
     const { scrollTop, scrollHeight, clientHeight } =
       document.documentElement || document.body;
-
-    // Detect when user has scrolled to the bottom
-    if (scrollTop + clientHeight >= scrollHeight - 5) {
+    if (scrollTop + clientHeight >= scrollHeight - 5 && !isLoading) {
       if (requests.length < totalCount) {
         setPage((prevPage) => prevPage + 1);
       }
     }
-  };
+  }, [isLoading, requests.length, totalCount]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleScroll]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -58,7 +67,6 @@ const VendorRequests = () => {
     setSelectedVendor(id);
     approveVendor(id)
       .then((data) => {
-        console.log("data in approveVendor", data);
         toast.success("Approved vendor successfully");
         setRequests((prevRequests) =>
           prevRequests.filter((vendor) => vendor._id !== id)
@@ -66,7 +74,6 @@ const VendorRequests = () => {
         setSelectedVendor(null);
       })
       .catch((error) => {
-        console.log("error in approveVendor:", error);
         toast.error("Failed to approve vendor");
         setSelectedVendor(null);
       });
@@ -76,7 +83,6 @@ const VendorRequests = () => {
     setSelectedVendor(id);
     rejectVendor(id)
       .then((data) => {
-        console.log("data in rejectVendor", data);
         toast.warning("Rejected the vendor");
         setRequests((prevRequests) =>
           prevRequests.filter((vendor) => vendor._id !== id)
@@ -84,12 +90,10 @@ const VendorRequests = () => {
         setSelectedVendor(null);
       })
       .catch((error) => {
-        console.log("error in rejectVendor:", error);
         toast.error("Failed to reject the request");
         setSelectedVendor(null);
       });
   };
-
   const getDisplayValue = (value) => {
     return value !== undefined && value !== null ? value : "N/A";
   };
@@ -97,7 +101,7 @@ const VendorRequests = () => {
   return (
     <div className="mt-8 overflow-x-auto border rounded-xl shadow-md">
       <div className="table-responsive">
-        <table className="table align-middle table-nowrap mb-0 h-9 w-full">
+        <table className="table align-middle table-nowrap mb-0 h-9 w-full text-textColor">
           <thead className="bg-subContainerColor h-10">
             <tr className="text-white">
               <th>Name</th>
@@ -168,12 +172,14 @@ const VendorRequests = () => {
                         onClick={(e) => {
                           e.stopPropagation(); // Prevent click from bubbling to the card div
                           Swal.fire({
+                            background: "#000", // Set background to black
+                            color: "#ffdd11", // Set text color to #ffdd11
                             title: "Are you sure?",
                             text: "You want approve this vendor!",
                             icon: "warning",
                             showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
+                            confirmButtonColor: "#ffdd11", // Set confirm button color to #ffdd11
+                            cancelButtonColor: "#000",
                             confirmButtonText: "Yes, approve!",
                           }).then((result) => {
                             if (result.isConfirmed) {
@@ -191,12 +197,14 @@ const VendorRequests = () => {
                         onClick={(e) => {
                           e.stopPropagation(); // Prevent click from bubbling to the card div
                           Swal.fire({
+                            background: "#000", // Set background to black
+                            color: "#ffdd11",
                             title: "Are you sure?",
                             text: "You want reject this vendor!",
                             icon: "warning",
                             showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
+                            confirmButtonColor: "#ffdd11", // Set confirm button color to #ffdd11
+                            cancelButtonColor: "#000",
                             confirmButtonText: "Yes, reject!",
                           }).then((result) => {
                             if (result.isConfirmed) {

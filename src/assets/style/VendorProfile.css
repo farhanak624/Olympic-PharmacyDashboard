@@ -1,0 +1,73 @@
+/* General styles for select dropdowns */
+.ventor-profile .select-input {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.ventor-profile .select-input select {
+  color: #1d1d1f !important;
+  background-color: #f8f8f8 !important;
+  border: 1px solid #ccc !important;
+  padding: 8px !important;
+  border-radius: 4px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.ventor-profile .select-input::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #1d1d1f;
+  pointer-events: none;
+}
+
+.ventor-profile .select-input select:focus {
+  outline: none !important;
+  border-color: #ffdd11 !important;
+}
+
+.ventor-profile .select-input select option {
+  color: #1d1d1f !important;
+  background-color: #f8f8f8 !important;
+}
+
+/* Placeholder text styling */
+.ventor-profile .select-input select::placeholder {
+  color: #1d1d1f !important;
+}
+
+/* Specific styles for react-country-state-city components */
+.ventor-profile .react-country-state-city {
+  width: 100% !important;
+}
+
+.ventor-profile .react-country-state-city select {
+  color: #1d1d1f !important;
+  background-color: #f8f8f8 !important;
+  border: 1px solid #ccc !important;
+  padding: 8px !important;
+  border-radius: 4px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.ventor-profile .react-country-state-city select:focus {
+  outline: none !important;
+  border-color: #ffdd11 !important;
+}
+
+.ventor-profile .react-country-state-city option {
+  color: #1d1d1f !important;
+  background-color: #f8f8f8 !important;
+}

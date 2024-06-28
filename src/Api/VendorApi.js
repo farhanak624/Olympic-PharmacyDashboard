@@ -1,5 +1,20 @@
 import EcomUpdatedInstance from "./Axios";
 
+export const resendOTP = async (data) => {
+  return await EcomUpdatedInstance.post(`/vendor/resendOtp`, data);
+};
+export const verifyOTP = async (data) => {
+  return await EcomUpdatedInstance.post(`/vendor/verifyOtp`, data);
+};
+
+export const addProfile = async (data) => {
+  console.log("wholeData:", data);
+  return await EcomUpdatedInstance.post(`/vendor/addProfiles`, data);
+};
+export const signup = async (data) => {
+  console.log("signup", data);
+  return await EcomUpdatedInstance.post(`/vendor/signup`, data);
+};
 export const vendorCostomersDemoGraph = async () => {
   return await EcomUpdatedInstance.get("vendor/customers");
 };

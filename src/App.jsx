@@ -36,6 +36,10 @@ import VendorCoupons from "./Pages/Vendor/Coupon/VendorCoupons";
 import VendMain from "./Pages/Admin/Vendors/VendMain";
 import VenDetail from "./Pages/Admin/Vendors/VenDetail";
 import VendorRequests from "./Pages/Admin/Vendors/VendorRequests";
+import OtpVerify from "./Pages/Auth/OtpVerify";
+import VentorProfile from "./Pages/Auth/VentorProfile";
+import ProcessingPage from "./Pages/Auth/ProcessingPage";
+import BlockedPage from "./Pages/Auth/BlockedPage";
 
 function App() {
   return (
@@ -100,7 +104,13 @@ function App() {
         <Route element={<LoginCheck />} path="">
           <Route element={<LoginIn />} path="/login" />
           <Route element={<PharmacyRegister />} path="/register" />
+          <Route element={<OtpVerify />} path="/verifyOTP" />
+          <Route path="/addProfile" element={<VentorProfile />} />
         </Route>
+        <Route path="/blocked" element={<BlockedPage />} />
+        <Route path="/processing" element={<ProcessingPage />} />
+        {/* <Route path="/404" element={<NotFound />} /> */}
+      <Route path="*" element={<Navigate replace to="/404" />} />
       </Routes>
     </BrowserRouter>
   );

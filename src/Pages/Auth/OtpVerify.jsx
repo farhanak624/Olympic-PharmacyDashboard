@@ -1,16 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { resendOtp, verifyOtp } from "../API/ApiPharma";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { homeCareResendOtp, homeCareVerifyOtp } from "../API/ApiHomeCare";
-import { restaurantSendOtp, restaurantVerifyOtp } from "../API/ApiFood";
-import { resendDoctorOtp, verifyDoctorOtp } from "../API/ApiTeleMed";
+import { resendOTP, verifyOTP } from "../../Api/VendorApi";
 
 const OtpVerify = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [otpArray, setOtpArray] = useState(["", "", "", ""]);
+  const [otpArray, setOtpArray] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef([null, null, null, null]);
   const [countdown, setCountdown] = useState(180);
   const userEmail = location?.state?.email;
@@ -39,7 +35,7 @@ const OtpVerify = () => {
     newOtp[index] = e.target.value;
     setOtpArray(newOtp);
 
-    if (e.target.value && index < 3) {
+    if (e.target.value && index < 5) {
       setTimeout(() => {
         inputRefs.current[index + 1].focus();
       }, 0);
@@ -49,26 +45,11 @@ const OtpVerify = () => {
     try {
       // console.log("resend otp",role);
       console.log("resend");
-      setOtpArray(["", "", "", ""]);
-      if (role === "homecare") {
-        const res = await homeCareResendOtp({ email: userEmail });
-        console.log("res in resend: ", res?.data);
-        setCountdown(180);
-      }else if(role==="food"){
-        console.log("resend2");
-        const res = await restaurantSendOtp({ email: userEmail });
-        console.log("res in resend: ", res?.data);
-        setCountdown(180);
-      } else if(role ==="doctor"){
-        console.log("docor resend");
-        const res = await resendDoctorOtp({ email: userEmail });
-        console.log("res in resend: ", res);
-        setCountdown(180);
-      }else{
-        const res = await resendOtp({ email: userEmail });
-        console.log("res in resend: ", res);
-        setCountdown(180);
-      }
+      setOtpArray(["", "", "", "", "", ""]);
+
+      const res = await resendOTP({ email: userEmail });
+      console.log("res in resend: ", res);
+      setCountdown(180);
     } catch (error) {
       console.log("error resend: ", error);
       toast.error(error?.data?.message || error.error);
@@ -90,55 +71,18 @@ const OtpVerify = () => {
       const otp = otpArray.join("");
       console.log({ otp, userEmail });
 
-      if (role === "homecare") {
-        const res = await homeCareVerifyOtp({ email: userEmail, otp });
-        console.log("res in verifyOTP: ", res);
-        // localStorage.setItem("encryptedToken", JSON.stringify(res.data));
-        // localStorage.setItem("token", res?.data?.encryptedToken);
-        toast.success(res?.data?.message);
-        if (res.status === 200 ) {
-            return navigate("/login");
-          
-        } else {
-          toast.error("error in verifyOTP");
-        }
-      }else if(role === "food"){
-        const res = await restaurantVerifyOtp({ email: userEmail, otp });
-        console.log("res in verifyOTP: ", res);
-        toast.success(res?.data?.message);
-        // localStorage.setItem("encryptedToken", JSON.stringify(res.data));
-        // localStorage.setItem("token", res?.data?.encryptedToken);
-        if (res.status === 200 ) {
-          return navigate("/login");
-        } else {
-          toast.error("error in verifyOTP");
-        }
-      } else if(role ==="doctor"){
-        const res = await verifyDoctorOtp({ email: userEmail, otp });
-        console.log("res in verifyOTP: ", res);
-        toast.success(res?.data?.message);
-        // localStorage.setItem("encryptedToken", JSON.stringify(res.data));
-        // localStorage.setItem("token", res?.data?.encryptedToken);
-        if (res.status === 200 ) {
-            return navigate("/login");
-        } else {
-          console.log("error in verifyOTP");
-        }
-      } else{
-        const res = await verifyOtp({ email: userEmail, otp });
-        console.log("res in verifyOTP: ", res);
-        localStorage.setItem("encryptedToken", JSON.stringify(res.data));
-        localStorage.setItem("token", res?.data?.encryptedToken);
-        if (res.status === 200) {
-          if (res.data.role === "vendor") {
-            toast.success(res?.data?.message);
-            return navigate("/login");
-          } else if (res.data.role === "admin") {
-            navigate("/");
-          }
-        } else {
-          console.log("error in verifyOTP");
-        }
+      const res = await verifyOTP({ email: userEmail, otp });
+      console.log("res in verifyOTP: ", res);
+      localStorage.setItem("encryptedToken", JSON.stringify(res.data));
+      localStorage.setItem("token", res?.data?.encryptedToken);
+      if (res.data.message) {
+        const responseEmail = res.data.email;
+        toast.success(res?.data?.message || error.error);
+        console.log("responseEmail in verifyOTP: ", responseEmail);
+        navigate("/addProfile", { state: { email: responseEmail } });
+      } else {
+        console.log("error in verifyOTP",res?.error?.data?.message);
+        toast.error(res?.error?.data?.message);
       }
     } catch (error) {
       console.log("error otp verify: ", error);
@@ -193,7 +137,7 @@ const OtpVerify = () => {
               </p>
             )}
             <div class="flex space-x-2 mb-6">
-              {Array.from({ length: 4 }).map((_, index) => (
+              {Array.from({ length: 6 }).map((_, index) => (
                 <input
                   key={index}
                   id="otp"
@@ -216,7 +160,7 @@ const OtpVerify = () => {
             </div>
             <button
               onClick={handleSubmit}
-              class="bg-yellow-500 text-black px-6 py-2 rounded-md font-semibold hover:bg-yellow-600"
+              class="bg-navblue text-black px-6 py-2 rounded-md font-semibold hover:bg-yellow-600"
             >
               Confirm OTP
             </button>
@@ -227,7 +171,7 @@ const OtpVerify = () => {
               <p
                 onClick={resendOtpHandler}
                 href="#"
-                className="text-yellow-400 hover:underline cursor-pointer mt-2"
+                className="text-navblue hover:underline cursor-pointer mt-2"
               >
                 {" "}
                 Resend
