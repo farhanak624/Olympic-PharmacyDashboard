@@ -4,6 +4,7 @@ import OrderTable from "./OrderTable";
 import Card from "../../../Components/Card/Card";
 import { getAdminDashboardData } from "../../../Api/AdminApi";
 import ChartComponent from "./Chart/ChartComponent";
+import { loadSpinner } from "../../../Redux/Features/NavbarSlice";
 
 const AdminDashboard = () => {
   const [selected, setselected] = useState("This Year");
@@ -20,15 +21,15 @@ const AdminDashboard = () => {
   }, [selected]);
   const getData = async (selected) => {
     try {
-      // dispatch(loadSpinner());
+      dispatch(loadSpinner());
       const res = await getAdminDashboardData(selected);
       console.log(res.data);
       setDashBoarbData(res.data);
       setOrderData(res.data);
-      // dispatch(loadSpinner());
+      dispatch(loadSpinner());
     } catch (error) {
       console.log(error);
-      // dispatch(loadSpinner());
+      dispatch(loadSpinner());
     }
   };
 
